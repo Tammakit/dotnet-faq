@@ -5,9 +5,10 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: [
-    './src/main',
-  ],
+  entry: {
+    main: './src/main',
+    'mind-map': './src/mind-map',
+  },
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),

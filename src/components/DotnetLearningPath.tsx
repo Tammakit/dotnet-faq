@@ -5,7 +5,7 @@ const elements = [
   {
     id: 'root',
     data: { label: (<div> ASP.NET Core developer, Learn the Prerequisites</div>) },
-    position: { x: 500, y: 25 },
+    position: { x: 500, y: 0 },
     sourcePosition: Position.Bottom, // Ede position at node
   },
   // default node
@@ -32,8 +32,16 @@ const elements = [
 ];
 
 const DotnetLearningPath = () => (
-  <div style={{ height: '100%' }}>
-    <ReactFlow elements={elements} nodesDraggable={false} paneMoveable={false} />
+  <div style={{ height: 500 }}>
+    <ReactFlow
+      elements={elements}
+      nodesDraggable={false}
+      paneMoveable={false}
+      onNodeMouseEnter={(e) => {
+        const element = e.target as HTMLElement;
+        element.style.cursor = 'default';
+      }}
+    />
   </div>
 );
 
