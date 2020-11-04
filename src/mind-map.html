@@ -5,10 +5,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .node circle {
+      fill: #999;
+    }
+
+    .node text {
+      font: 12px sans-serif;
+    }
+
+    .node--internal circle {
+      fill: #555;
+    }
+
+    .link {
+      fill: none;
+      stroke: #555;
+      stroke-opacity: 0.4;
+      stroke-width: 1.5px;
+    }
+  </style>
 </head>
 
 <body>
-  Mind map
+  <svg width="900" height="600"></svg>
   <script src="mind-map-bundle.js"></script>
 </body>
 
