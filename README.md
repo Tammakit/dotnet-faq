@@ -28,4 +28,7 @@ FAQ from [.NET Thailand group](https://www.facebook.com/groups/dotnetthailand)
 - [ ] Use async for IO bound. It is good for scalability and does not require extra thread so you don't use a thread just for waiting a long-running IO process. [Read more](https://app.pluralsight.com/guides/using-task-run-async-await)
 
 ### .NET Core ใช้ library ตัวไหนอ่านเขียน Excel ดี?
-- แนะนำ Excel library list ในนี้ครับ https://github.com/dotnetthailand/awesome-dotnet-thailand#document-excel
+- แนะนำ Excel library list ในนี้ครับ https://github.com/dotnetthailand/awesome-dotnet-thailand#excel-word
+
+### .NET Core ใช้ library ตัวไหนสร้าง PDF file ดี
+- แนะนำ PDF library list ในนี้ครับ https://github.com/dotnetthailand/awesome-dotnet-thailand#pdf
