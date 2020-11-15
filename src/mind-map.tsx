@@ -9,6 +9,81 @@ interface HierarchyDatum {
   children?: Array<HierarchyDatum>;
 }
 
+// draw single tree
+function drawTree(rootData: HierarchyNode<HierarchyDatum>, position) {
+  const svg = d3.select('svg');
+  const width = parseInt(svg.attr('width'), 10);
+  const height = parseInt(svg.attr('height'), 10);
+
+  // Shift the entire tree by half it's width
+  const g = svg.append('g').attr('transform', `translate(${width / 2}, 0)`);
+
+  const SWITCH_CONST = position === 'right' ? 1 : -1;
+  /*
+           900
+  +---------+---------+
+  |         |         |
+  |         |         | 600
+  |         |         |
+  +---------+---------+
+                450
+  */
+
+  // Create new default tree layout
+
+  const tree = d3.tree<HierarchyDatum>()
+    // Set the size
+    // Remember the tree is rotated
+    // so the height is used as the width
+    // and the width as the height
+    .size([
+      height, // width
+      // height, negative height for left handside
+      // Adjust a little space to fit a label.
+      (SWITCH_CONST * ((width) / 2)) - 50,
+    ]);
+
+  const root = tree(rootData);
+  const nodes = root.descendants();
+  const links = root.links();
+
+  // Set both root nodes at the center vertically
+  nodes[0].x = height / 2;
+
+  // Create links
+  const link = g.selectAll('.link')
+    .data(links)
+    .enter();
+
+  // invert target to source
+  link.append('path')
+    .attr('class', 'link')
+    .attr(
+      'd',
+      (d) => `
+        M${d.target.y}, ${d.target.x}
+        C${(d.target.y + d.source.y) / 2.5}, ${d.target.x} 
+        ${(d.target.y + d.source.y) / 2}, ${d.source.x} 
+        ${d.source.y}, ${d.source.x}
+        `,
+    );
+
+  // Create nodes
+  const node = g.selectAll('.node')
+    .data(nodes)
+    .enter()
+    .append('g')
+    .attr('class', (d) => `node${d.children ? ' node--internal' : ' node--leaf'}`)
+    .attr('transform', (d) => `translate(${d.y},${d.x})`);
+
+  node.append('circle').attr('r', () => 2.5);
+
+  node.append('text')
+    .attr('dy', -20) // Indicates a shift along the y-axis on the position of an element or its content.
+    .style('text-anchor', 'middle')
+    .text((d) => d.data.name);
+}
+
 const data: HierarchyDatum = {
   name: '.NET Thailand',
   children: [
@@ -105,64 +180,10 @@ const data2 = {
   children: JSON.parse(JSON.stringify(data.children.slice(splitIndex))),
 };
 
-// draw single tree
-function drawTree(rootData: HierarchyNode<HierarchyDatum>, pos) {
-  let SWITCH_CONST = 1;
-  if (pos === 'left') {
-    SWITCH_CONST = -1;
-  }
-
-  const svg = d3.select('svg');
-  const width = +svg.attr('width');
-  const height = +svg.attr('height');
-
-  // Shift the entire tree by half it's width
-  const g = svg.append('g').attr('transform', `translate(${width / 2},0)`);
-
-  // Create new default tree layout
-  const tree = d3.tree<HierarchyDatum>()
-    // Set the size
-    // Remember the tree is rotated
-    // so the height is used as the width
-    // and the width as the height
-    .size([height, (SWITCH_CONST * (width - 150)) / 2]);
-
-  const root = tree(rootData);
-  const nodes = root.descendants();
-  const links = root.links();
-
-  // Set both root nodes to be dead center vertically
-  nodes[0].x = height / 2;
-
-  // Create links
-  const link = g.selectAll('.link')
-    .data(links)
-    .enter();
-
-  link.append('path')
-    .attr('class', 'link')
-    .attr('d', (d) => `M${d.target.y},${d.target.x}C${(d.target.y + d.source.y) / 2.5},${d.target.x} ${(d.target.y + d.source.y) / 2},${d.source.x} ${d.source.y},${d.source.x}`);
-
-  // Create nodes
-  const node = g.selectAll('.node')
-    .data(nodes)
-    .enter()
-    .append('g')
-    .attr('class', (d) => `node${d.children ? ' node--internal' : ' node--leaf'}`)
-    .attr('transform', (d) => `translate(${d.y},${d.x})`);
-
-  node.append('circle').attr('r', (d, i) => 2.5);
-
-  node.append('text')
-    .attr('dy', 3)
-    .style('text-anchor', 'middle')
-    .text((d) => d.data.name);
-}
-
 // Create d3 hierarchies
 const right = d3.hierarchy<HierarchyDatum>(data1);
 const left = d3.hierarchy<HierarchyDatum>(data2);
 
 // Render both trees
 drawTree(right, 'right');
-drawTree(left, 'left');
+// drawTree(left, 'left');
